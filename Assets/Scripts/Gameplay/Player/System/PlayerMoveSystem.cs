@@ -3,17 +3,27 @@ using UnityEngine;
 
 namespace ECS_Learning
 {
-    public class PlayerMoveSystem : IEcsRunSystem
+    public class PlayerMoveSystem : IEcsInitSystem, IEcsRunSystem
     {
-        public void Run(IEcsSystems systems)
+        private EcsFilter _filter;
+        private EcsPool<PlayerInput> _inputPool;
+        private EcsPool<PlayerComponent> _pool;
+
+        public void Init(IEcsSystems systems)
         {
             EcsWorld world = systems.GetWorld();
-            EcsFilter filter = world.Filter<PlayerInput>().Inc<PlayerComponent>().End();
+          
+            _filter = world.Filter<PlayerInput>().Inc<PlayerComponent>().End();
+            _pool = world.GetPool<PlayerComponent>();
+            _inputPool = world.GetPool<PlayerInput>();
+        }
 
-            foreach (int entity in filter)
+        public void Run(IEcsSystems systems)
+        {
+            foreach (int entity in _filter)
             {
-                ref PlayerInput input = ref world.GetPool<PlayerInput>().Get(entity);
-                ref PlayerComponent player = ref world.GetPool<PlayerComponent>().Get(entity);
+                ref PlayerInput input = ref _inputPool.Get(entity);
+                ref PlayerComponent player = ref _pool.Get(entity);
 
                 player.Rigidbody.MovePosition(player.Rigidbody.position + input.MoveDirection * player.Speed * Time.fixedDeltaTime);
             }

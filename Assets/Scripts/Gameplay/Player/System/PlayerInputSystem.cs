@@ -3,17 +3,24 @@ using UnityEngine;
 
 namespace ECS_Learning
 {
-    public class PlayerInputSystem : IEcsRunSystem
+    public class PlayerInputSystem : IEcsInitSystem, IEcsRunSystem
     {
-        public void Run(IEcsSystems systems)
+        private EcsFilter _filter;
+        private EcsPool<PlayerInput> _pool;
+
+        public void Init(IEcsSystems systems)
         {
             EcsWorld world = systems.GetWorld();
-            EcsFilter filter = world.Filter<PlayerInput>().End();
-            EcsPool<PlayerInput> pool = world.GetPool<PlayerInput>();
+          
+            _filter = world.Filter<PlayerInput>().End();
+            _pool = world.GetPool<PlayerInput>();
+        }
 
-            foreach (int entity in filter)
+        public void Run(IEcsSystems systems)
+        {
+            foreach (int entity in _filter)
             {
-                ref PlayerInput input = ref pool.Get(entity);
+                ref PlayerInput input = ref _pool.Get(entity);
                 input.MoveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             }
         }

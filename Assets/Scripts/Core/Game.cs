@@ -6,6 +6,8 @@ namespace ECS_Learning
     public class Game : MonoBehaviour
     {
         [SerializeField] private Player _playerPrefab;
+        [SerializeField] private Camera _camera;
+        [SerializeField] private Bullet _bulletPrefab;
 
         private EcsWorld _world;
         private EcsSystems _systems;
@@ -20,8 +22,15 @@ namespace ECS_Learning
             _systems
                 .Add(new PlayerInitSystem(_playerPrefab))
                 .Add(new PlayerInputSystem())
+                .Add(new PlayerRotationSystem(_camera))
+                .Add(new PlayerAnimationSystem())
+                .Add(new CameraFollowSystem(_camera))
+                .Add(new WeaponInitSystem())
+                .Add(new PlayerShootSystem(_bulletPrefab));
+
+            _fixedSystems
                 .Add(new PlayerMoveSystem());
-            
+
             _systems.Init();
             _fixedSystems.Init();
         }

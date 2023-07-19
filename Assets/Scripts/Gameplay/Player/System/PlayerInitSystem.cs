@@ -25,12 +25,15 @@ namespace ECS_Learning
             inputPool.Add(entity);
 
             Vector3 position = Vector3.zero + new Vector3(0, 1, 0);
-            Player player = Object.Instantiate(_playerPrefab, position, Quaternion.identity);
+            Player player = Object.Instantiate(_playerPrefab, position, _playerPrefab.transform.rotation);
 
             ref PlayerComponent playerComponent = ref pool.Get(entity);
 
             playerComponent.Rigidbody = player.Rigidbody;
             playerComponent.Speed = player.Speed;
+            playerComponent.Animator = player.Animator;
+            playerComponent.FollowOffset = player.FollowOffset;
+            playerComponent.CameraFollowSpeed = player.CameraFollowSpeed;
         }
     }
 }
