@@ -1,26 +1,19 @@
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace ECS_Learning
+namespace Game
 {
-    public class PlayerInputSystem : IEcsInitSystem, IEcsRunSystem
+    public class PlayerInputSystem : IEcsRunSystem
     {
-        private EcsFilter _filter;
-        private EcsPool<PlayerInput> _pool;
-
-        public void Init(IEcsSystems systems)
-        {
-            EcsWorld world = systems.GetWorld();
-          
-            _filter = world.Filter<PlayerInput>().End();
-            _pool = world.GetPool<PlayerInput>();
-        }
-
         public void Run(IEcsSystems systems)
         {
-            foreach (int entity in _filter)
+            EcsWorld world = systems.GetWorld();
+            EcsFilter filter = world.Filter<PlayerInput>().End();
+            EcsPool<PlayerInput> pool = world.GetPool<PlayerInput>();
+
+            foreach (int entity in filter)
             {
-                ref PlayerInput input = ref _pool.Get(entity);
+                ref PlayerInput input = ref pool.Get(entity);
                 input.MoveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
             }
         }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ECS_Learning
+namespace Game
 {
     public struct PlayerInput
     {

@@ -3,7 +3,7 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace ECS_Learning
+namespace Game
 {
     public class PlayerShootSystem : IEcsRunSystem
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ECS_Learning
+namespace Game
 {
     public struct PlayerComponent
     {
@@ -13,5 +13,7 @@ namespace ECS_Learning
         public Vector3 FollowOffset { get; set; }
        
         public float CameraFollowSpeed { get; set; }
+        
+        public Transform BulletSpawnPoint { get; set; }
     }
 }

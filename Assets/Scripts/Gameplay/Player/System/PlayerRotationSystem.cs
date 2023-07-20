@@ -2,33 +2,26 @@ using System;
 using Leopotam.EcsLite;
 using UnityEngine;
 
-namespace ECS_Learning
+namespace Game
 {
-    public class PlayerRotationSystem : IEcsInitSystem, IEcsRunSystem
+    public class PlayerRotationSystem : IEcsRunSystem
     {
         private readonly Camera _camera;
-      
-        private EcsFilter _filter;
-        private EcsPool<PlayerComponent> _pool;
 
         public PlayerRotationSystem(Camera camera)
         {
             _camera = camera ? camera : throw new ArgumentNullException(nameof(camera));
         }
 
-        public void Init(IEcsSystems systems)
-        {
-            EcsWorld world = systems.GetWorld();
-
-            _filter = world.Filter<PlayerComponent>().End();
-            _pool = world.GetPool<PlayerComponent>();
-        }
-
         public void Run(IEcsSystems systems)
         {
-            foreach (int entity in _filter)
+            EcsWorld world = systems.GetWorld();
+            EcsFilter filter = world.Filter<PlayerComponent>().End();
+            EcsPool<PlayerComponent> pool = world.GetPool<PlayerComponent>();
+
+            foreach (int entity in filter)
             {
-                ref PlayerComponent player = ref _pool.Get(entity);
+                ref PlayerComponent player = ref pool.Get(entity);
 
                 Plane plane = new Plane(Vector3.up, player.Rigidbody.position);
                 Ray ray = _camera.ScreenPointToRay(Input.mousePosition);

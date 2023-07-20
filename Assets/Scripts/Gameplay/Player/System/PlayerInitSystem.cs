@@ -3,7 +3,7 @@ using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace ECS_Learning
+namespace Game
 {
     public class PlayerInitSystem : IEcsInitSystem
     {
@@ -34,6 +34,7 @@ namespace ECS_Learning
             playerComponent.Animator = player.Animator;
             playerComponent.FollowOffset = player.FollowOffset;
             playerComponent.CameraFollowSpeed = player.CameraFollowSpeed;
+            playerComponent.BulletSpawnPoint = player.BulletSpawnPoint;
         }
     }
 }
