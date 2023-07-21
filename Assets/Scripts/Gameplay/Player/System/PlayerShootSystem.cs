@@ -30,6 +30,7 @@ namespace Game
                     {
                         weapon.Bullets--;
                         Bullet bullet = Object.Instantiate(_bulletPrefab, weapon.BulletSpawnPoint.position, Quaternion.identity);
+                        bullet.Init(world);
                         bullet.Throw(weapon.BulletSpawnPoint.forward);
                     }
                     else

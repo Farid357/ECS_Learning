@@ -32,7 +32,7 @@ namespace Game
                 EcsPool<EnemyComponent> pool = world.GetPool<EnemyComponent>();
              
                 pool.Add(entity);
-                enemy.Init(entity);
+                enemy.Init(world.PackEntity(entity));
                 ref EnemyComponent enemyComponent = ref pool.Get(entity);
                 enemyComponent.Health = enemy.Health;
                 enemyComponent.Score = enemy.Score;

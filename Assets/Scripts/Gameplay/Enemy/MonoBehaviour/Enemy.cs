@@ -1,16 +1,17 @@
+using Leopotam.EcsLite;
 using UnityEngine;
 
 namespace Game
 {
     public class Enemy : MonoBehaviour
     {
-        public int Entity { get; private set; }
+        public EcsPackedEntity Entity { get; private set; }
         
         [field: SerializeField] public int Health { get; private set; }
      
         [field: SerializeField] public int Score { get; set; }
 
-        public void Init(int entity)
+        public void Init(EcsPackedEntity entity)
         {
             Entity = entity;
         }
