@@ -7,7 +7,7 @@ namespace Game
     {
         [SerializeField] private TMP_Text _text;
         
-        public void Visualize(Score score)
+        public void Visualize(in ScoreComponent score)
         {
             _text.text = score.Count.ToString();
         }

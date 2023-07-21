@@ -1,21 +1,32 @@
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
 using UnityEngine;
 
 namespace Game
 {
-    public class PlayerInputSystem : IEcsRunSystem
+    public class PlayerInputSystem : ISystem
     {
-        public void Run(IEcsSystems systems)
-        {
-            EcsWorld world = systems.GetWorld();
-            EcsFilter filter = world.Filter<PlayerInput>().End();
-            EcsPool<PlayerInput> pool = world.GetPool<PlayerInput>();
+        private Filter _filter;
+  
+        public World World { get; set; }
 
-            foreach (int entity in filter)
+        public void OnAwake()
+        {
+            _filter = World.Filter.With<PlayerInputComponent>();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            foreach (Entity entity in _filter)
             {
-                ref PlayerInput input = ref pool.Get(entity);
+                ref PlayerInputComponent input = ref entity.GetComponent<PlayerInputComponent>();
                 input.MoveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                input.IsShooting = Input.GetMouseButtonDown(0);
             }
+        }
+
+        public void Dispose()
+        {
+        //    _filter = null;
         }
     }
 }

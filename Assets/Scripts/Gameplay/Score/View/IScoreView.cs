@@ -2,6 +2,6 @@ namespace Game
 {
     public interface IScoreView
     {
-        void Visualize(Score score);
+        void Visualize(in ScoreComponent score);
     }
 }

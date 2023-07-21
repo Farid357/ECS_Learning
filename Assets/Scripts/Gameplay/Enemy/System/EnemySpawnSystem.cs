@@ -1,44 +1,42 @@
-using System;
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
 using Tools;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Game
 {
-    public class EnemySpawnSystem : IEcsRunSystem
+    public class EnemySpawnSystem : ISystem
     {
-        private readonly IEnemySpawnSystemData _data;
-        
-        private float _timer;
+        private Filter _filter;
+        private float _timer = 10;
+       
+        public World World { get; set; }
 
-        public EnemySpawnSystem(IEnemySpawnSystemData data)
+        public void OnAwake()
         {
-            _data = data ?? throw new ArgumentNullException(nameof(data));
-            _timer = _data.TimeBetweenSpawn;
+            _filter = World.Filter.With<EnemySpawnComponent>();
         }
-        
-        public void Run(IEcsSystems systems)
-        {
-            _timer += Time.deltaTime;
 
-            if (_timer >= _data.TimeBetweenSpawn)
+        public void OnUpdate(float deltaTime)
+        {
+            _timer += deltaTime;
+
+            foreach (Entity entity in _filter)
             {
-                EcsWorld world = systems.GetWorld();
-                Vector3 position = _data.SpawnPoints.GetRandom().position;
-                Enemy enemy = Object.Instantiate(_data.EnemyPrefab, position, Quaternion.identity);
-              
-                int entity = world.NewEntity();
-                EcsPool<EnemyComponent> pool = world.GetPool<EnemyComponent>();
-             
-                pool.Add(entity);
-                enemy.Init(world.PackEntity(entity));
-                ref EnemyComponent enemyComponent = ref pool.Get(entity);
-                enemyComponent.Health = enemy.Health;
-                enemyComponent.Score = enemy.Score;
+                EnemySpawnComponent spawnComponent = entity.GetComponent<EnemySpawnComponent>();
                 
-                _timer = 0;
+                if (_timer >= spawnComponent.TimeBetweenSpawn)
+                {
+                    Vector3 position = spawnComponent.SpawnPoints.GetRandom().position;
+                    Object.Instantiate(spawnComponent.EnemyPrefab, position, Quaternion.identity);
+                    _timer = 0;
+                }
             }
+        }
+
+        public void Dispose()
+        {
+            _filter = null;
         }
     }
 }

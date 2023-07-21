@@ -1,32 +1,44 @@
-using System;
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
 using UnityEngine;
 
 namespace Game
 {
-    public class CameraFollowSystem : IEcsRunSystem
+    public class CameraFollowSystem : ISystem
     {
-        private readonly Camera _camera;
-        public CameraFollowSystem(Camera camera)
+        private Filter _playerFilter;
+        private Filter _cameraFilter;
+
+        public World World { get; set; }
+
+        public void OnAwake()
         {
-            _camera = camera ? camera : throw new ArgumentNullException(nameof(camera));
+            _cameraFilter = World.Filter.With<CameraComponent>();
+            _playerFilter = World.Filter.With<PhysicsMoveComponent>().With<PlayerInputComponent>();
         }
-        
-        public void Run(IEcsSystems systems)
+
+        public void OnUpdate(float deltaTime)
         {
-            EcsWorld world = systems.GetWorld();
-            EcsFilter filter = world.Filter<PlayerComponent>().End();
-            EcsPool<PlayerComponent> playerPool = world.GetPool<PlayerComponent>();
-
-            foreach (int entity in filter)
-            {
-                ref PlayerComponent player = ref playerPool.Get(entity);
-
-                Vector3 position = _camera.transform.position;
-                Vector3 nextPosition = Vector3.MoveTowards(position, player.Rigidbody.transform.position + player.FollowOffset, player.CameraFollowSpeed * Time.deltaTime);
+            Rigidbody rigidbody = null;
             
-                _camera.transform.position = nextPosition;
+            foreach (Entity entity in _playerFilter)
+            {
+                ref PhysicsMoveComponent moveComponent = ref entity.GetComponent<PhysicsMoveComponent>();
+                rigidbody = moveComponent.Rigidbody;
             }
+
+            foreach (Entity entity in _cameraFilter)
+            {
+                ref CameraComponent component = ref entity.GetComponent<CameraComponent>();
+                Camera camera = component.Camera;
+                Vector3 position = camera.transform.position;
+                Vector3 nextPosition = Vector3.MoveTowards(position, rigidbody.transform.position + component.FollowOffset, component.FollowSpeed * Time.deltaTime);
+                camera.transform.position = nextPosition;
+            }
+        }
+
+        public void Dispose()
+        {
+            _playerFilter = null;
         }
     }
 }

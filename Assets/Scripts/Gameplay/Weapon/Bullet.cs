@@ -1,5 +1,4 @@
-using System;
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
 using UnityEngine;
 
 namespace Game
@@ -10,13 +9,6 @@ namespace Game
         [SerializeField] private float _throwForce = 10f;
         [SerializeField] private int _damage = 10;
 
-        private EcsWorld _world;
-
-        public void Init(EcsWorld world)
-        {
-            _world = world ?? throw new ArgumentNullException(nameof(world));
-        }
-        
         public void Throw(Vector3 direction)
         {
             _rigidbody.AddForce(direction * _throwForce, ForceMode.Impulse);
@@ -24,26 +16,11 @@ namespace Game
 
         private void OnTriggerEnter(Collider collider)
         {
-            if (collider.TryGetComponent(out Enemy enemy))
+            if (collider.TryGetComponent(out EnemyProvider enemy))
             {
-                EcsPool<EnemyComponent> pool = _world.GetPool<EnemyComponent>();
-                EcsPackedEntity packedEntity = enemy.Entity;
-
-                if (!packedEntity.Unpack(_world, out int entity))
-                    return;
-            
-                if (!pool.Has(entity))
-                    return;
-                
-                ref EnemyComponent enemyComponent = ref pool.Get(entity);
+                Entity enemyEntity = enemy.Entity;
+                ref EnemyComponent enemyComponent = ref enemyEntity.GetComponent<EnemyComponent>();
                 enemyComponent.Health -= _damage;
-
-                if (enemyComponent.Health <= 0)
-                {
-                    pool.Del(entity);
-                    enemy.DestroySelf();
-                }
-
                 Destroy(gameObject);
             }
         }

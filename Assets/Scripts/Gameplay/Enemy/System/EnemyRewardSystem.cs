@@ -1,31 +1,41 @@
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
 
 namespace Game
 {
-    public class EnemyRewardSystem : IEcsRunSystem
+    public class EnemyRewardSystem : ISystem
     {
-        public void Run(IEcsSystems systems)
-        {
-            EcsWorld world = systems.GetWorld();
-            EcsPool<EnemyComponent> enemyPool = world.GetPool<EnemyComponent>();
-            EcsFilter filter = world.Filter<EnemyComponent>().End();
+        private Filter _enemyFilter;
+        private Filter _scoreFilter;
+        
+        public World World { get; set; }
 
-            foreach (int entity in filter)
+        public void OnAwake()
+        {
+            _enemyFilter = World.Filter.With<EnemyComponent>();
+            _scoreFilter = World.Filter.With<ScoreComponent>();
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            foreach (Entity entity in _enemyFilter)
             {
-                EnemyComponent enemy = enemyPool.Get(entity);
+                ref EnemyComponent enemy = ref entity.GetComponent<EnemyComponent>();
 
                 if (enemy.Health <= 0)
                 {
-                    EcsPool<Score> scorePool = world.GetPool<Score>();
-                    EcsFilter scoreFilter = world.Filter<Score>().End();
-
-                    foreach (int scoreEntity in scoreFilter)
+                    foreach (Entity scoreEntity in _scoreFilter)
                     {
-                        ref Score score = ref scorePool.Get(scoreEntity);
+                        ref ScoreComponent score = ref scoreEntity.GetComponent<ScoreComponent>();
                         score.Count += enemy.Score;
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _enemyFilter = null;
+            _scoreFilter = null;
         }
     }
 }

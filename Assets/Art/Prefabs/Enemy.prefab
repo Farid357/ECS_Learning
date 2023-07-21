@@ -2051,8 +2051,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d56b1d69c46b4575a9599158ef0ce60b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Health>k__BackingField: 10
-  <Score>k__BackingField: 30
+  serializedData:
+    Health: 30
+    Score: 30
 --- !u!65 &1637307620301459131
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,9 +1,12 @@
+using System;
+using Scellecs.Morpeh;
+
 namespace Game
 {
-    public struct EnemyComponent
+    [Serializable]
+    public struct EnemyComponent : IComponent
     {
-        public int Health { get; set; }
-
-        public int Score { get; set; }
+        public int Health;
+        public int Score;
     }
 }

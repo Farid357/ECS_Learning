@@ -1507,6 +1507,8 @@ GameObject:
   - component: {fileID: 4735986849638114018}
   - component: {fileID: 6120608564072166334}
   - component: {fileID: 819452346602306282}
+  - component: {fileID: 5892140110358971001}
+  - component: {fileID: 4185298015487302144}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1569,12 +1571,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468cd1d59cef4cf784bd744175da5270, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Rigidbody>k__BackingField: {fileID: 6120608564072166334}
-  <Speed>k__BackingField: 4.8
-  <Animator>k__BackingField: {fileID: 1893642907306574997}
-  <FollowOffset>k__BackingField: {x: 0, y: 2, z: -3.8}
-  <CameraFollowSpeed>k__BackingField: 2
-  <BulletSpawnPoint>k__BackingField: {fileID: 1665618153732680348}
+  serializedData:
+    Animator: {fileID: 1893642907306574997}
 --- !u!54 &6120608564072166334
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1604,6 +1602,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5270371, y: 1.9944927, z: 1}
   m_Center: {x: 0, y: 0.97836465, z: 0}
+--- !u!114 &5892140110358971001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893642905549842224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471740749a609a849b01536defa8d463, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializedData:
+    Rigidbody: {fileID: 6120608564072166334}
+    Speed: 4.8
+--- !u!114 &4185298015487302144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893642905549842224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089561a3bf624e678619057a068ededd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1893642905549842226
 GameObject:
   m_ObjectHideFlags: 0
@@ -2653,6 +2678,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1893642905549749086}
   - component: {fileID: 1893642905544567408}
+  - component: {fileID: 695679130271261305}
   m_Layer: 0
   m_Name: AssaultRifle
   m_TagString: Untagged
@@ -2785,6 +2811,22 @@ SkinnedMeshRenderer:
     m_Center: {x: -34.27955, y: -49.079704, z: 120.48372}
     m_Extent: {x: 95.48148, y: 94.6697, z: 10.629513}
   m_DirtyAABB: 0
+--- !u!114 &695679130271261305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893642905549842302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b29d790af53cf8b4ca5494cb00948bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializedData:
+    Bullets: 30
+    MaxBullets: 30
+    BulletSpawnPoint: {fileID: 1665618153732680348}
 --- !u!1 &2213130926632197869
 GameObject:
   m_ObjectHideFlags: 0

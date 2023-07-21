@@ -1,62 +1,63 @@
-using Leopotam.EcsLite;
+using Scellecs.Morpeh;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Game.Core
 {
-    public class Game : MonoBehaviour
+    public class Game : SerializedMonoBehaviour
     {
-        [SerializeField] private Player _playerPrefab;
-        [SerializeField] private Camera _camera;
         [SerializeField] private Bullet _bulletPrefab;
-        [SerializeField] private ScoreFactory _scoreFactory;
-        [SerializeField] private EnemySpawnSystemData _enemySpawnData;
+        [SerializeField] private IScoreView _scoreView;
 
-        private IEcsSystems _systems;
-        private IEcsSystems _fixedSystems;
-        private EcsWorld _world;
+        private SystemsGroup _systems;
+        private World _world;
 
         private void Awake()
         {
-            _world = new EcsWorld();
-            _systems = new EcsSystems(_world);
-            _fixedSystems = new EcsSystems(_world);
-
-            _scoreFactory.Create(_systems);
-
-            _systems
-                .Add(new PlayerInitSystem(_playerPrefab))
-                .Add(new PlayerInputSystem())
-                .Add(new PlayerRotationSystem(_camera))
-                .Add(new PlayerAnimationSystem())
-                .Add(new CameraFollowSystem(_camera))
-                .Add(new WeaponInitSystem())
-                .Add(new PlayerShootSystem(_bulletPrefab))
-                .Add(new EnemyRewardSystem())
-                .Add(new EnemySpawnSystem(_enemySpawnData));
-
-            _fixedSystems
-                .Add(new PlayerMoveSystem());
-
+            _world = World.Default;
+            _systems = _world.CreateSystemsGroup();
             
-            _systems.Init();
-            _fixedSystems.Init();
+            _systems.AddInitializer(new PlayerSpawnSystem());
+            _systems.AddInitializer(new ScoreCreateSystem());
+        
+            _systems.AddSystem(new PlayerInputSystem());
+            _systems.AddSystem(new PlayerMoveSystem());
+            _systems.AddSystem(new PlayerRotationSystem());
+            _systems.AddSystem(new PlayerMoveAnimationSystem());
+            _systems.AddSystem(new PlayerShootSystem(_bulletPrefab));
+            _systems.AddSystem(new PlayerMoveAnimationSystem());
+            _systems.AddSystem(new PlayerShootAnimationSystem());
+            
+            _systems.AddSystem(new CameraFollowSystem());
+
+            _systems.AddSystem(new ScoreViewSystem(_scoreView));
+            _systems.AddSystem(new EnemyRewardSystem());
+            _systems.AddSystem(new EnemySpawnSystem());
+
+            _systems.AddSystem(new EnemyCleanupSystem());
+            
+            _systems.Initialize();
         }
 
         private void Update()
         {
-            _systems.Run();
+            _systems.Update(Time.deltaTime);
         }
 
         private void FixedUpdate()
         {
-            _fixedSystems.Run();
+            _systems.FixedUpdate(Time.fixedDeltaTime);
+        }
+
+        private void LateUpdate()
+        {
+            _systems.LateUpdate(Time.deltaTime);
         }
 
         private void OnDestroy()
         {
-            _world.Destroy();
-            _systems.Destroy();
-            _fixedSystems.Destroy();
+            _systems.Dispose();
+            _world.Dispose();
         }
     }
 }
