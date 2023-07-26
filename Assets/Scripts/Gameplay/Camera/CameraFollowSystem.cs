@@ -18,21 +18,19 @@ namespace Game
 
         public void OnUpdate(float deltaTime)
         {
-            Rigidbody rigidbody = null;
-            
-            foreach (Entity entity in _playerFilter)
+            foreach (Entity playerEntity in _playerFilter)
             {
-                ref PhysicsMoveComponent moveComponent = ref entity.GetComponent<PhysicsMoveComponent>();
-                rigidbody = moveComponent.Rigidbody;
-            }
+                ref PhysicsMoveComponent moveComponent = ref playerEntity.GetComponent<PhysicsMoveComponent>();
+                Rigidbody rigidbody = moveComponent.Rigidbody;
 
-            foreach (Entity entity in _cameraFilter)
-            {
-                ref CameraComponent component = ref entity.GetComponent<CameraComponent>();
-                Camera camera = component.Camera;
-                Vector3 position = camera.transform.position;
-                Vector3 nextPosition = Vector3.MoveTowards(position, rigidbody.transform.position + component.FollowOffset, component.FollowSpeed * Time.deltaTime);
-                camera.transform.position = nextPosition;
+                foreach (Entity cameraEntity in _cameraFilter)
+                {
+                    ref CameraComponent component = ref cameraEntity.GetComponent<CameraComponent>();
+                    Camera camera = component.Camera;
+                    Vector3 position = camera.transform.position;
+                    Vector3 nextPosition = Vector3.MoveTowards(position, rigidbody.transform.position + component.FollowOffset, component.FollowSpeed * Time.deltaTime);
+                    camera.transform.position = nextPosition;
+                }
             }
         }
 
