@@ -15,9 +15,10 @@ namespace Game.Core
 
         public override void InstallBindings()
         {
-            _systems.AddSystem(new EnemyRewardSystem());
-            _systems.AddSystem(new EnemySpawnSystem());
-            _systems.AddSystem(new EnemyCleanupSystem());
+            _systems.AddSystem(Container.Instantiate<EnemyRewardSystem>());
+            _systems.AddSystem(Container.Instantiate<EnemySpawnSystem>());
+            _systems.AddSystem(Container.Instantiate<EnemyMoveSystem>());
+            _systems.AddSystem(Container.Instantiate<EnemyCleanupSystem>());
         }
     }
 }
